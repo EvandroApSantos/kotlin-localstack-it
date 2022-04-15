@@ -42,6 +42,9 @@ val integrationTests = task<Test>("integrationTests") {
 
 tasks {
     integrationTests
+    test {
+        exclude("*IT")
+    }
 }
 
 dockerCompose {
