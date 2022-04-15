@@ -20,7 +20,7 @@ class AWSCarMaintenanceConsolidationRepository(
     private val s3Properties: S3Properties
 ) : CarMaintenanceConsolidationRepository {
     private val s3Client =
-        createS3Client(address = s3Properties.generalProps.address, region = s3Properties.generalProps.region)
+        createS3Client(address = s3Properties.address, region = s3Properties.region)
 
     override fun getCurrentConsolidation(id: UUID): CarMaintenanceConsolidation? =
         try {

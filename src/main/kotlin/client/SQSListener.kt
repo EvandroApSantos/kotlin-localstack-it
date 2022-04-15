@@ -16,7 +16,7 @@ class SQSListener(private val sqsProperties: SQSProperties) {
     fun <T : Any> start(classType: KClass<T>, messageProcessor: (List<T>) -> Unit) {
         runBlocking {
             launch {
-                val sqsClient = createSQSClient(address = sqsProperties.generalProps.address, region = sqsProperties.generalProps.region)
+                val sqsClient = createSQSClient(address = sqsProperties.address, region = sqsProperties.region)
                 val messageRequest = ReceiveMessageRequest.builder()
                     .queueUrl(getQueueUrl())
                     .waitTimeSeconds(20)
@@ -54,5 +54,5 @@ class SQSListener(private val sqsProperties: SQSProperties) {
         }
 
     private fun getQueueUrl(): String =
-        "${sqsProperties.generalProps.address}/${sqsProperties.generalProps.account}/${sqsProperties.queueName}"
+        "${sqsProperties.address}/${sqsProperties.account}/${sqsProperties.queueName}"
 }
