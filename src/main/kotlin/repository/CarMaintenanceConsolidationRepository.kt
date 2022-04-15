@@ -11,12 +11,17 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.util.*
 
-class CarMaintenanceConsolidationRepository(
+interface CarMaintenanceConsolidationRepository {
+    fun getCurrentConsolidation(id: UUID): CarMaintenanceConsolidation?
+    fun persistConsolidation(carMaintenanceConsolidation: CarMaintenanceConsolidation)
+}
+
+class AWSCarMaintenanceConsolidationRepository(
     private val awsProperties: AWSProperties
-) {
+): CarMaintenanceConsolidationRepository {
     private val s3Client = createS3Client(address = awsProperties.address, region = awsProperties.region)
 
-    fun getCurrentConsolidation(id: UUID): CarMaintenanceConsolidation? =
+    override fun getCurrentConsolidation(id: UUID): CarMaintenanceConsolidation? =
         try {
             s3Client.getObjectAsBytes(
                 GetObjectRequest.builder()
@@ -30,7 +35,7 @@ class CarMaintenanceConsolidationRepository(
             null
         }
 
-    fun persistConsolidation(carMaintenanceConsolidation: CarMaintenanceConsolidation) =
+    override fun persistConsolidation(carMaintenanceConsolidation: CarMaintenanceConsolidation) {
         with(PutObjectRequest.builder()) {
             bucket(awsProperties.carMaintenanceBucket.bucketName)
                 .key(getObjectKey(carMaintenanceConsolidation.id))
@@ -38,6 +43,7 @@ class CarMaintenanceConsolidationRepository(
         }.let {
             s3Client.putObject(it, RequestBody.fromBytes(objectMapper.writeValueAsBytes(carMaintenanceConsolidation)))
         }
+    }
 
     private fun getObjectKey(id: UUID): String =
         "$id.json"

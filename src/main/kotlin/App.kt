@@ -3,11 +3,13 @@ import configuration.loadConfiguration
 import model.CarMaintenance
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import repository.AWSCarMaintenanceConsolidationRepository
 import service.CarMaintenanceConsolidationService
 
 fun main() {
     val appProperties = loadConfiguration()
-    val service = CarMaintenanceConsolidationService(appProperties.awsProperties)
+    val repository = AWSCarMaintenanceConsolidationRepository(appProperties.awsProperties)
+    val service = CarMaintenanceConsolidationService(repository = repository)
 
     SQSListener(awsProperties = appProperties.awsProperties).start(classType = CarMaintenance::class) {
         logger.debug("Message received: {}", it)

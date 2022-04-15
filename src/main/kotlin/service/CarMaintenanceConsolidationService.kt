@@ -1,14 +1,12 @@
 package service
 
-import configuration.AWSProperties
 import logger
 import model.CarMaintenance
 import model.CarMaintenanceConsolidation
 import repository.CarMaintenanceConsolidationRepository
 import java.time.Instant
 
-class CarMaintenanceConsolidationService(awsProperties: AWSProperties) {
-    private val repository = CarMaintenanceConsolidationRepository(awsProperties)
+class CarMaintenanceConsolidationService(private val repository: CarMaintenanceConsolidationRepository) {
 
     fun consolidateMaintenance(carMaintenance: CarMaintenance) {
         val currentConsolidation = getCurrentConsolidation(carMaintenance = carMaintenance)
