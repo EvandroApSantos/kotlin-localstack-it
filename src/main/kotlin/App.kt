@@ -10,7 +10,7 @@ fun main() {
     val service = CarMaintenanceConsolidationService(appProperties.awsProperties)
 
     SQSListener(awsProperties = appProperties.awsProperties).start(classType = CarMaintenance::class) {
-        println(it)
+        logger.debug("Message received: {}", it)
         it.forEach { carMaintenance -> service.consolidateMaintenance(carMaintenance) }
     }
 }
