@@ -1,6 +1,6 @@
 package client
 
-import configuration.AWSProperties
+import configuration.SQSProperties
 import configuration.objectMapper
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -12,13 +12,13 @@ import software.amazon.awssdk.services.sqs.model.OverLimitException
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import kotlin.reflect.KClass
 
-class SQSListener(private val awsProperties: AWSProperties) {
+class SQSListener(private val sqsProperties: SQSProperties) {
     fun <T : Any> start(classType: KClass<T>, messageProcessor: (List<T>) -> Unit) {
         runBlocking {
             launch {
-                val sqsClient = createSQSClient(address = awsProperties.address, region = awsProperties.region)
+                val sqsClient = createSQSClient(address = sqsProperties.generalProps.address, region = sqsProperties.generalProps.region)
                 val messageRequest = ReceiveMessageRequest.builder()
-                    .queueUrl(getQueueUrl(awsProperties))
+                    .queueUrl(getQueueUrl())
                     .waitTimeSeconds(20)
                     .maxNumberOfMessages(1)
                     .build()
@@ -47,12 +47,12 @@ class SQSListener(private val awsProperties: AWSProperties) {
         messages.forEach {
             sqsClient.deleteMessage(
                 DeleteMessageRequest.builder()
-                    .queueUrl(getQueueUrl(awsProperties))
+                    .queueUrl(getQueueUrl())
                     .receiptHandle(it.receiptHandle())
                     .build()
             )
         }
 
-    private fun getQueueUrl(awsProperties: AWSProperties): String =
-        "${awsProperties.address}/${awsProperties.account}/${awsProperties.carMaintenanceQueue.queueName}"
+    private fun getQueueUrl(): String =
+        "${sqsProperties.generalProps.address}/${sqsProperties.generalProps.account}/${sqsProperties.queueName}"
 }

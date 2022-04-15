@@ -2,7 +2,7 @@ package repository
 
 import client.createS3Client
 import com.fasterxml.jackson.module.kotlin.readValue
-import configuration.AWSProperties
+import configuration.S3Properties
 import configuration.objectMapper
 import model.CarMaintenanceConsolidation
 import software.amazon.awssdk.core.sync.RequestBody
@@ -17,15 +17,16 @@ interface CarMaintenanceConsolidationRepository {
 }
 
 class AWSCarMaintenanceConsolidationRepository(
-    private val awsProperties: AWSProperties
-): CarMaintenanceConsolidationRepository {
-    private val s3Client = createS3Client(address = awsProperties.address, region = awsProperties.region)
+    private val s3Properties: S3Properties
+) : CarMaintenanceConsolidationRepository {
+    private val s3Client =
+        createS3Client(address = s3Properties.generalProps.address, region = s3Properties.generalProps.region)
 
     override fun getCurrentConsolidation(id: UUID): CarMaintenanceConsolidation? =
         try {
             s3Client.getObjectAsBytes(
                 GetObjectRequest.builder()
-                    .bucket(awsProperties.carMaintenanceBucket.bucketName)
+                    .bucket(s3Properties.bucketName)
                     .key(getObjectKey(id))
                     .build()
             ).asByteArray().let {
@@ -37,9 +38,9 @@ class AWSCarMaintenanceConsolidationRepository(
 
     override fun persistConsolidation(carMaintenanceConsolidation: CarMaintenanceConsolidation) {
         with(PutObjectRequest.builder()) {
-            bucket(awsProperties.carMaintenanceBucket.bucketName)
-                .key(getObjectKey(carMaintenanceConsolidation.id))
-                .build()
+            bucket(s3Properties.bucketName)
+            key(getObjectKey(carMaintenanceConsolidation.id))
+            build()
         }.let {
             s3Client.putObject(it, RequestBody.fromBytes(objectMapper.writeValueAsBytes(carMaintenanceConsolidation)))
         }

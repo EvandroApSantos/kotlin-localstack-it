@@ -8,10 +8,10 @@ import service.CarMaintenanceConsolidationService
 
 fun main() {
     val appProperties = loadConfiguration()
-    val repository = AWSCarMaintenanceConsolidationRepository(appProperties.awsProperties)
+    val repository = AWSCarMaintenanceConsolidationRepository(appProperties.carMaintenanceBucket)
     val service = CarMaintenanceConsolidationService(repository = repository)
 
-    SQSListener(awsProperties = appProperties.awsProperties).start(classType = CarMaintenance::class) {
+    SQSListener(sqsProperties = appProperties.carMaintenanceQueue).start(classType = CarMaintenance::class) {
         logger.debug("Message received: {}", it)
         it.forEach { carMaintenance -> service.consolidateMaintenance(carMaintenance) }
     }
