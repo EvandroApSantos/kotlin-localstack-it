@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.20"
+    id("com.avast.gradle.docker-compose") version "0.15.2"
 
     application
 }
@@ -32,4 +33,18 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass.set("kotlin.App")
+}
+
+val integrationTests = task<Test>("integrationTests") {
+    group = "verification"
+    include("*IT")
+}
+
+tasks {
+    integrationTests
+}
+
+dockerCompose {
+    isRequiredBy(integrationTests)
+    setProperty("useComposeFiles", listOf("infra/docker-compose.yaml"))
 }
