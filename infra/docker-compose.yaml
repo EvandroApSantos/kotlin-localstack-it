@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: test-kotlin-localstack
+    environment:
+      - SERVICES=sqs,s3
+      - DEFAULT_REGION=sa-east-1
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./create-infrastructure.sh:/docker-entrypoint-initaws.d/create-infrastructure.sh
