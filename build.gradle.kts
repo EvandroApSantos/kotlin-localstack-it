@@ -31,8 +31,7 @@ dependencies {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass.set("kotlin.App")
+    mainClass.set("AppKt")
 }
 
 val integrationTests = task<Test>("integrationTests") {
