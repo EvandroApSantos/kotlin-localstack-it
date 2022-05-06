@@ -29,7 +29,10 @@ data class SQSProperties(
     val address: String,
     val account: String,
     val region: String
-)
+) {
+    fun getQueueUrl(): String =
+        "$address/$account/$queueName"
+}
 
 data class S3Properties(
     val bucketName: String,

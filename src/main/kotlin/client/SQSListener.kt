@@ -18,7 +18,7 @@ class SQSListener(private val sqsProperties: SQSProperties) {
             launch {
                 val sqsClient = createSQSClient(address = sqsProperties.address, region = sqsProperties.region)
                 val messageRequest = ReceiveMessageRequest.builder()
-                    .queueUrl(getQueueUrl())
+                    .queueUrl(sqsProperties.getQueueUrl())
                     .waitTimeSeconds(20)
                     .maxNumberOfMessages(1)
                     .build()
@@ -47,12 +47,9 @@ class SQSListener(private val sqsProperties: SQSProperties) {
         messages.forEach {
             sqsClient.deleteMessage(
                 DeleteMessageRequest.builder()
-                    .queueUrl(getQueueUrl())
+                    .queueUrl(sqsProperties.getQueueUrl())
                     .receiptHandle(it.receiptHandle())
                     .build()
             )
         }
-
-    private fun getQueueUrl(): String =
-        "${sqsProperties.address}/${sqsProperties.account}/${sqsProperties.queueName}"
 }
