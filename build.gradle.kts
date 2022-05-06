@@ -26,8 +26,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2")
 
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 application {
@@ -36,13 +35,15 @@ application {
 
 val integrationTests = task<Test>("integrationTests") {
     group = "verification"
-    include("*IT")
+    useJUnitPlatform()
+    include("**/*IT*")
 }
 
 tasks {
     integrationTests
     test {
-        exclude("*IT")
+        useJUnitPlatform()
+        exclude("**/*IT*")
     }
 }
 

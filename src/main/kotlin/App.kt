@@ -1,4 +1,5 @@
 import client.SQSListener
+import configuration.ApplicationProperties
 import configuration.loadConfiguration
 import model.CarMaintenance
 import org.slf4j.Logger
@@ -7,7 +8,10 @@ import repository.AWSCarMaintenanceConsolidationRepository
 import service.CarMaintenanceConsolidationService
 
 fun main() {
-    val appProperties = loadConfiguration()
+    startup()
+}
+
+fun startup() {
     val repository = AWSCarMaintenanceConsolidationRepository(appProperties.carMaintenanceBucket)
     val service = CarMaintenanceConsolidationService(repository = repository)
 
@@ -17,4 +21,5 @@ fun main() {
     }
 }
 
+val appProperties: ApplicationProperties = loadConfiguration()
 val logger: Logger = LoggerFactory.getLogger("com.easantos.localstack.it.app")
