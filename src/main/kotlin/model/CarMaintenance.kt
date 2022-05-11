@@ -4,11 +4,15 @@ import java.time.Instant
 import java.util.UUID
 
 data class CarMaintenance(
+    val car: Car,
+    val maintenanceInfo: MaintenanceInfo
+)
+
+data class Car(
     val id: UUID,
     val licensePlate: String,
     val make: String,
-    val model: String,
-    val maintenanceInfo: MaintenanceInfo
+    val model: String
 )
 
 data class MaintenanceInfo(
@@ -17,10 +21,7 @@ data class MaintenanceInfo(
 )
 
 data class CarMaintenanceConsolidation(
-    val id: UUID,
-    val licensePlate: String,
-    val make: String,
-    val model: String,
+    val car: Car,
     val lastUpdate: Instant? = null,
     val maintenanceInfo: List<MaintenanceInfo>
 )

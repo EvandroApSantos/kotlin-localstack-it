@@ -39,7 +39,7 @@ class AWSCarMaintenanceConsolidationRepository(
     override fun persistConsolidation(carMaintenanceConsolidation: CarMaintenanceConsolidation) {
         with(PutObjectRequest.builder()) {
             bucket(s3Properties.bucketName)
-            key(getObjectKey(carMaintenanceConsolidation.id))
+            key(getObjectKey(carMaintenanceConsolidation.car.id))
             build()
         }.let {
             s3Client.putObject(it, RequestBody.fromBytes(objectMapper.writeValueAsBytes(carMaintenanceConsolidation)))
