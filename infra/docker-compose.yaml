@@ -9,6 +9,9 @@ services:
       - DEFAULT_REGION=sa-east-1
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=foo
+    healthcheck:
+      test: awslocal sqs list-queues
+      start_period: 5s
     ports:
       - "4566:4566"
     volumes:
