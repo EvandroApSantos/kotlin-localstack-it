@@ -10,11 +10,11 @@ services:
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=foo
     healthcheck:
-      test: cat /tmp/result.txt || exit 1
       start_period: 5s
       interval: 10s
       timeout: 10s
       retries: 3
+      test: cat /tmp/result.txt || exit 1
     ports:
       - "4566:4566"
     volumes:
