@@ -4,10 +4,6 @@ services:
   localstack:
     image: localstack/localstack:latest
     container_name: test-kotlin-localstack
-    volumes:
-      - ./create-infrastructure.sh:/docker-entrypoint-initaws.d/create-infrastructure.sh
-    ports:
-      - "4566:4566"
     environment:
       - SERVICES=sqs,s3
       - DEFAULT_REGION=sa-east-1
@@ -19,3 +15,7 @@ services:
       timeout: 10s
       retries: 3
       test: cat /tmp/result.txt || exit 1
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./create-infrastructure.sh:/docker-entrypoint-initaws.d/create-infrastructure.sh
