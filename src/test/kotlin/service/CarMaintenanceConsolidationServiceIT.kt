@@ -63,20 +63,20 @@ class CarMaintenanceConsolidationServiceIT {
 
         waitForDequeueMessages()
 
-        val car1Maintenance = getMaintenanceConsolidation(car1.id)
+        val car1Maintenance: CarMaintenanceConsolidation? = getMaintenanceConsolidation(car1.id)
         Assertions.assertNotNull(car1Maintenance, "Consolidation for car1 has been found")
-        Assertions.assertEquals(car1Maintenance!!.maintenanceInfo.size, 2, "There are 2 maintenances for car1")
+        Assertions.assertEquals(car1Maintenance?.maintenanceInfo?.size, 2, "There are 2 maintenances for car1")
         Assertions.assertArrayEquals(
-            car1Maintenance.maintenanceInfo.map { it.description }.toTypedArray(),
+            car1Maintenance?.maintenanceInfo?.map { it.description }?.toTypedArray(),
             arrayOf("Fuel filter replacement", "Engine oil change"),
             "Maintenance descriptions checked for car1"
         )
 
-        val car2Maintenance = getMaintenanceConsolidation(car2.id)
+        val car2Maintenance: CarMaintenanceConsolidation? = getMaintenanceConsolidation(car2.id)
         Assertions.assertNotNull(car2Maintenance, "Consolidation for car2 has been found")
-        Assertions.assertEquals(car2Maintenance!!.maintenanceInfo.size, 1, "There is 1 maintenance for car2")
+        Assertions.assertEquals(car2Maintenance?.maintenanceInfo?.size, 1, "There is 1 maintenance for car2")
         Assertions.assertArrayEquals(
-            car2Maintenance.maintenanceInfo.map { it.description }.toTypedArray(),
+            car2Maintenance?.maintenanceInfo?.map { it.description }?.toTypedArray(),
             arrayOf("Carburetor cleanup"),
             "Maintenance description checked for car2"
         )
