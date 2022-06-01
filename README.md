@@ -55,3 +55,8 @@ Paste this address on your web browser replacing `<car-id>` with the id you have
 
 ### Running integration tests
 
+To run integration tests, use the following command:
+
+```shell
+gradle clean integrationTests
+```
