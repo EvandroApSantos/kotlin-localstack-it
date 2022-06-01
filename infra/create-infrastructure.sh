@@ -7,3 +7,5 @@ awslocal s3api create-bucket --bucket car-maintenance
 echo "Bucket car-maintenance created"
 
 echo "Localstack components created"
+
+echo "DONE" > /tmp/result.txt
